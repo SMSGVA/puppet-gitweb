@@ -8,7 +8,7 @@
 #
 # Sample Usage:
 #
-class gitweb::settings ( 
-  $site_alias = "gitweb",
+class gitweb::settings (
+  $site_alias = "gitweb"
 ) {
 }

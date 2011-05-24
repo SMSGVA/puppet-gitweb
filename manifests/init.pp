@@ -10,6 +10,8 @@
 #
 class gitweb {
 
+  include gitweb::settings
+
   package { "gitweb":
     ensure  => present,
   }
@@ -23,7 +25,7 @@ class gitweb {
     require => Package["gitweb"],
   }
 
-  apache::vhost { "$site_alias":
+  apache::vhost { "$gitweb::settings::site_alias":
     priority      => "10",
     port          => "443",
     ssl           => true,
