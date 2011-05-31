@@ -1,6 +1,11 @@
+NameVirtualHost  *:<%= port %>
 <VirtualHost *:<%= port %>>
     ServerName <%= name %>
     DocumentRoot <%= docroot %>
+
+    RewriteEngine On
+    RewriteRule ^/$ /gitweb [R]
+
     <Directory <%= docroot %>>
         Options ExecCGI +FollowSymLinks +SymLinksIfOwnerMatch
         AllowOverride All
@@ -8,6 +13,17 @@
         Allow from all
         AddHandler cgi-script cgi
         DirectoryIndex gitweb.cgi
+        <%# if auth == true -%>
+        AuthType Basic
+        AuthName "Protected"
+        AuthUserFile /usr/local/apache/passwd/passwords
+        Require valid-user
+        <%# end -%>
     </Directory>
+
+    ErrorLog /var/log/apache2/<%= name %>_error.log
+    LogLevel warn
+    CustomLog /var/log/apache2/<%= name %>_access.log combined
+    ServerSignature Off
 </VirtualHost>
 

@@ -21,14 +21,16 @@ class gitweb {
     owner   => "root",
     group   => "root",
     mode    => "0644",
-    source  => "puppet:///modules/gitweb/gitweb.conf",
+    content => template("gitweb/gitweb.conf.erb"),
     require => Package["gitweb"],
   }
 
+  A2mod <| title == "rewrite" |>
+
   apache::vhost { "$gitweb::settings::site_alias":
     priority      => "10",
-    port          => "443",
-    ssl           => true,
+    port          => "80",
+    ssl           => false,
     docroot       => "/var/www/git",
     template      => "gitweb/apache-gitweb.conf.erb",
   }
