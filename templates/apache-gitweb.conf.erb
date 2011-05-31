@@ -6,6 +6,12 @@ NameVirtualHost  *:<%= port %>
     RewriteEngine On
     RewriteRule ^/$ /gitweb [R]
 
+<% if ssl == true -%>
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/certs/gitweb.cert
+    SSLCertificateKeyFile /etc/ssl/private/gitweb.key
+<% end -%>
+
     <Directory <%= docroot %>>
         Options ExecCGI +FollowSymLinks +SymLinksIfOwnerMatch
         AllowOverride All
@@ -13,12 +19,10 @@ NameVirtualHost  *:<%= port %>
         Allow from all
         AddHandler cgi-script cgi
         DirectoryIndex gitweb.cgi
-        <%# if auth == true -%>
         AuthType Basic
         AuthName "Protected"
         AuthUserFile /usr/local/apache/passwd/passwords
         Require valid-user
-        <%# end -%>
     </Directory>
 
     ErrorLog /var/log/apache2/<%= name %>_error.log

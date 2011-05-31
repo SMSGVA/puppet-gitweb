@@ -1,13 +1,14 @@
 # Class: gitweb
-#
+#   Installs gitweb and configures apache to server it.
 # Parameters:
 #
 # Actions:
 #
 # Requires:
-#   - puppetlabs-apache
+#   - apache
+#   - gitweb::settings
 # Sample Usage:
-#
+#   include gitweb
 class gitweb {
 
   include gitweb::settings
@@ -27,10 +28,15 @@ class gitweb {
 
   A2mod <| title == "rewrite" |>
 
-  apache::vhost { "$gitweb::settings::site_alias":
+  apache::vhost::redirect { "${gitweb::settings::site_alias}":
+    port  => "80",
+    dest  => "https://${gitweb::settings::site_alias}",
+  }
+
+  apache::vhost { "${gitweb::settings::site_alias}_ssl":
     priority      => "10",
-    port          => "80",
-    ssl           => false,
+    port          => "443",
+    ssl           => true,
     docroot       => "/var/www/git",
     template      => "gitweb/apache-gitweb.conf.erb",
   }
